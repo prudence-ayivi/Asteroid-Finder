@@ -10,7 +10,7 @@ export default function Home() {
       </div>
 
       {/* Content */}
-      <div className="min-h-[65vh] mt-6 flex flex-row items-center justify-center gap-16 p-8 font-[family-name:var(--font-geist-mono)]">
+      <div className="min-h-[65vh] mt-8 flex flex-row items-center justify-center gap-16 p-8 font-[family-name:var(--font-geist-mono)]">
 
       <div className="flex flex-col items-center justify-center gap-4">
       <div className="h-[30px]">Input</div>
