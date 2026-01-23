@@ -91,7 +91,7 @@ export default function Home() {
         {totalAsteroids > 0 && (
           <div className="bg-white rounded-lg p-4 shadow-md">
             <p className="text-sm text-gray-600">Database contains</p>
-            <p className="text-xl font-bold text-gray-900 font-sans">{totalAsteroids.toLocaleString()} unique objects</p>
+            <p className="text-xl font-bold text-gray-900 font-sans">{totalAsteroids.toLocaleString()} Near Earth Objects</p>
             <p className="text-sm text-gray-500 mt-1">From NASA JPL Small-Body Database</p>
           </div>
         )}
@@ -182,7 +182,7 @@ export default function Home() {
 
       {/* Footer */}
       <div className="bg-gray-900 text-gray-400 text-sm py-6 px-8 border-t border-gray-700">
-        <p>Asteroid Finder © {new Date().getFullYear()} - Data sourced from NASA JPL Small-Body Database | Built with ❤️ by Prudence AYIVI</p>
+        <p>Asteroid Finder © 2025 - {new Date().getFullYear()} | By Prudence AYIVI</p>
       </div>
     </div>
   );

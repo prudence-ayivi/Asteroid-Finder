@@ -28,13 +28,13 @@ export default function AsteroidDetails({ asteroid }) {
   const neoPhaSentence = getNeoPhaSentence();
 
   return (
-    <div className="mt-4 bg-blue-50 rounded-lg p-6">
+    <div className="mt-4 bg-blue-50 rounded-lg p-4 md:p-6">
       <h2 className="text-2xl font-bold text-center text-gray-900 mb-4 font-sans">
         {typeLabel} - {asteroid.name || asteroid.pdes}
       </h2>
 
       {neoPhaSentence && (
-        <p className="text-gray-700 font-bold italic mb-4">
+        <p className="text-gray-700 font-bold mb-4">
           Is {neoPhaSentence}.
         </p>
       )}
@@ -42,7 +42,7 @@ export default function AsteroidDetails({ asteroid }) {
       {orbitType && (
         <div className="mb-4 p-3 bg-white rounded">
           <div className="flex justify-between items-center">
-            <p className="text-gray-800 font-semibold font-sans">Orbital Classification :</p>
+            <p className="text-gray-800 font-semibold font-sans">Orbital Type :</p>
             <p className="text-gray-700 font-medium font-sans">{getOrbitTypeLabel(asteroid.class)}</p>
           </div>
           <p className="text-sm text-gray-600 mt-1">{orbitType.description}</p>
@@ -71,7 +71,7 @@ export default function AsteroidDetails({ asteroid }) {
 
         {asteroid.a && (
           <p className="text-gray-700">
-            <span className="font-semibold font-sans">Semi-major Axis (a) :</span> {asteroid.a} au
+            <span className="font-semibold font-sans">Semi-major Axis (a) :</span> {asteroid.a} AU
           </p>
         )}
 
@@ -81,27 +81,9 @@ export default function AsteroidDetails({ asteroid }) {
           </p>
         )}
 
-        {asteroid.q && (
-          <p className="text-gray-700">
-            <span className="font-semibold font-sans">Perihelion Distance (q) :</span> {asteroid.q} au
-          </p>
-        )}
-
-        {asteroid.ad && (
-          <p className="text-gray-700">
-            <span className="font-semibold font-sans">Aphelion Distance (ad) :</span> {asteroid.ad} au
-          </p>
-        )}
-
         {asteroid.i && (
           <p className="text-gray-700">
             <span className="font-semibold font-sans">Inclination (i) :</span> {asteroid.i}°
-          </p>
-        )}
-
-        {asteroid.per_y && (
-          <p className="text-gray-700">
-            <span className="font-semibold font-sans">Orbital Period :</span> {asteroid.per_y} years
           </p>
         )}
 
@@ -111,11 +93,30 @@ export default function AsteroidDetails({ asteroid }) {
           </p>
         )}
 
+        {asteroid.per_y && (
+          <p className="text-gray-700">
+            <span className="font-semibold font-sans">Orbital Period :</span> {asteroid.per_y} years
+          </p>
+        )}
+
         {asteroid.n && (
           <p className="text-gray-700">
             <span className="font-semibold font-sans">Mean Motion (n) :</span> {asteroid.n}°/day
           </p>
         )}
+
+        {asteroid.q && (
+          <p className="text-gray-700">
+            <span className="font-semibold font-sans">Perihelion Distance (q) :</span> {asteroid.q} AU
+          </p>
+        )}
+
+        {asteroid.ad && (
+          <p className="text-gray-700">
+            <span className="font-semibold font-sans">Aphelion Distance (ad) :</span> {asteroid.ad} AU
+          </p>
+        )}
+
       </div>
 
       <a
@@ -124,7 +125,7 @@ export default function AsteroidDetails({ asteroid }) {
         rel="noopener noreferrer"
         className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition font-sans"
       >
-        View on NASA SBDB
+        View full details here
       </a>
     </div>
   );
