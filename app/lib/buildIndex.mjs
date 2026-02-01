@@ -4,7 +4,7 @@ import csv from "csv-parser";
 import path from "path";
 
 const index = {};
-const csvPath = path.join(process.cwd(), "public", "neos_sbdb_query.csv");
+const csvPath = path.join(process.cwd(), "public", "neos_sbdb_query_0102.csv");
 fs.createReadStream(csvPath)
   .pipe(csv())
   .on("data", (row) => {

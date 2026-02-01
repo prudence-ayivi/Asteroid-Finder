@@ -98,7 +98,7 @@ export default function Home() {
 
         {/* Search Section */}
         <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
             <div className="flex gap-3 flex-col sm:flex-row">
               <input
                 type="date"
@@ -114,6 +114,7 @@ export default function Home() {
                 {loading ? 'Searching...' : 'Search'}
               </button>
             </div>
+            <p className="text-[12px] text-gray-500">The date are based on first officaily recorded observation, which for some objects diffred from official discovery date</p>
           </div>
         </div>
 
