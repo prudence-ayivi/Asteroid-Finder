@@ -3,14 +3,22 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import AsteroidList from './components/AsteroidList';
+import { getDateRange } from './lib/dateRangeUtils';
 
 export default function Home() {
   const [date, setDate] = useState('');
+  const [nameQuery, setNameQuery] = useState('');
+  const [nameResults, setNameResults] = useState(null);
+  const [nameLoading, setNameLoading] = useState(false);
+  const [nameError, setNameError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
   const [selectedAsteroid, setSelectedAsteroid] = useState(null);
   const [totalAsteroids, setTotalAsteroids] = useState(0);
+  
+  // Get date range constraints
+  const { minDate, maxDate } = getDateRange();
 
   // Load total asteroids on mount
   useEffect(() => {
@@ -27,6 +35,54 @@ export default function Home() {
     };
     loadTotal();
   }, []);
+
+  // Debounced name search: wait 300ms after user stops typing
+  useEffect(() => {
+    if (!nameQuery || nameQuery.trim().length < 2) {
+      setNameResults(null);
+      setNameError(null);
+      setNameLoading(false);
+      return;
+    }
+
+    const controller = new AbortController();
+    setNameLoading(true);
+    setNameError(null);
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/asteroids/search?q=${encodeURIComponent(nameQuery)}&limit=20`, { signal: controller.signal });
+        const json = await res.json();
+        if (!res.ok) {
+          setNameError(json.message || 'Error searching');
+          setNameResults([]);
+        } else {
+          setNameResults(json.objects || []);
+        }
+      } catch (err) {
+        if (err.name === 'AbortError') return;
+        console.error('Name search error:', err);
+        setNameError('Network error during name search');
+        setNameResults([]);
+      } finally {
+        setNameLoading(false);
+      }
+    }, 300);
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [nameQuery]);
+
+  // Clear date search results when date is cleared
+  useEffect(() => {
+    if (!date) {
+      setData(null);
+      setError(null);
+      setSelectedAsteroid(null);
+    }
+  }, [date]);
 
   const search = async () => {
     if (!date) {
@@ -97,26 +153,62 @@ export default function Home() {
         )}
 
         {/* Search Section */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg shadow-sm p-4">
           <div className="flex flex-col gap-2">
             <div className="flex gap-3 flex-col sm:flex-row">
               <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="flex-3 border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-blue-600 transition"
+                type="text"
+                placeholder="Search objects by name or designation (ex : Eros)"
+                value={nameQuery}
+                onChange={(e) => setNameQuery(e.target.value)}
+                disabled={!!date}
+                className="flex-6 border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-blue-600 transition"
               />
-              <button
-                onClick={search}
-                disabled={loading}
-                className="bg-gray-900 cursor-pointer hover:bg-gray-800 disabled:opacity-50 text-white font-semibold px-4 py-2 rounded-lg transition whitespace-nowrap"
-              >
-                {loading ? 'Searching...' : 'Search'}
-              </button>
+              <div className="flex items-center gap-3 w-full sm:w-auto">
+                <input
+                  type="date"
+                  min={minDate}
+                  max={maxDate}
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  disabled={!!nameQuery}
+                  className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:border-blue-600 transition"
+                />
+                <button
+                  onClick={search}
+                  disabled={loading || !!nameQuery}
+                  className="bg-gray-900 cursor-pointer hover:bg-gray-800 disabled:opacity-50 text-white font-semibold px-4 py-3 rounded-lg transition whitespace-nowrap"
+                >
+                  {loading ? 'Searching...' : 'Search'}
+                </button>
+              </div>
             </div>
-            <p className="text-[12px] text-gray-500">The date are based on first officaily recorded observation, which for some objects diffred from official discovery date</p>
+            <p className="text-[12px] text-gray-500">The date are based on first officaily recorded observation, which for some objects differed from official discovery date</p>
           </div>
         </div>
+
+          {/* Name search dropdown / suggestions */}
+              {nameQuery && (
+                <div className="mt-3">
+                  <div className="bg-white rounded-lg shadow-sm">
+                    {nameLoading && <p className="text-gray-600 p-3">Searching...</p>}
+                    {nameError && <p className="text-red-600 p-3">{nameError}</p>}
+                    {!nameLoading && !nameError && nameResults && nameResults.length === 0 && (
+                      <p className="text-gray-500 p-3">No results</p>
+                    )}
+                    {!nameLoading && nameResults && nameResults.length > 0 && (
+                      <div>
+                        <p className="text-sm text-gray-600 p-3">Results</p>
+                        <AsteroidList
+                          asteroids={nameResults}
+                          selectedAsteroid={selectedAsteroid}
+                          onSelectAsteroid={handleSelectAsteroid}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
         {/* Results */}
         {loading && (
