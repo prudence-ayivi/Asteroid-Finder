@@ -1,12 +1,15 @@
 import { put } from "@vercel/blob";
 
+
 export async function GET() {
   try {
     const nasaRes = await fetch(
-      "https://ssd-api.jpl.nasa.gov/sbdb_query.api?neo=Y&pha=Y&fields=spk_id,full_name,pdes,name,diameter,e,a,q,i,om,ma,ad,n,per,per_y,class,first_obs,last_obs,H"
+      "https://ssd-api.jpl.nasa.gov/sbdb_query.api?fields=spkid,full_name,pdes,name,diameter,e,a,q,i,om,ma,ad,n,per,per_y,class,first_obs,last_obs,H&sb-group=neo"
     );
 
     if (!nasaRes.ok) {
+      const errorText = await nasaRes.text();
+      console.error("NASA API error:", errorText);
       return new Response("NASA fetch failed", { status: 500 });
     }
 
@@ -17,41 +20,41 @@ export async function GET() {
     const index = {};
 
     for (const obj of objects) {
-      const [spk_id, name, first_obs, abs_mag] = obj;
+      const [spkid, full_name, pdes, name, neo, pha, diameter, e, a, q, i, om, ma, ad, n, per, per_y, classValue, first_obs, last_obs, H] = obj;
 
       if (!index[first_obs]) {
         index[first_obs] = [];
       }
 
       index[first_obs].push({
-        spk_id,
+        spkid,
         full_name,
-      pdes,
-      name,
-      neo,
-      pha,
-      diameter,
-      e,
-      a,
-      q,
-      i, 
-      om,
-      ma,
-      ad,
-      n,
-      per,
-      per_y,
-      class: row.class,
-      first_obs,
-      last_obs,
-      H,
+        pdes,
+        name,
+        neo,
+        pha,
+        diameter,
+        e,
+        a,
+        q,
+        i,
+        om,
+        ma,
+        ad,
+        n,
+        per,
+        per_y,
+        class: classValue,
+        last_obs,
+        H,
       });
     }
 
     const jsonString = JSON.stringify(index);
 
-    await put("neos-by-date.json", jsonString, {
+    await put("neos-by-date.json", JSON.stringify(index), {
       access: "public",
+      allowOverwrite: true, // Enable overwriting an existing blob with the same pathname
       contentType: "application/json"
     });
 
