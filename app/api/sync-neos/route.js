@@ -55,8 +55,6 @@ export async function GET() {
       });
     }
 
-    const jsonString = JSON.stringify(index);
-
     await put("neos-by-date.json", JSON.stringify(index), {
       access: "public",
       allowOverwrite: true, 
