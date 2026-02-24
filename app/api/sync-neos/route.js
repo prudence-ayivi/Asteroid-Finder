@@ -59,7 +59,7 @@ export async function GET() {
 
     await put("neos-by-date.json", JSON.stringify(index), {
       access: "public",
-      allowOverwrite: true, // Enable overwriting an existing blob with the same pathname
+      allowOverwrite: true, 
       contentType: "application/json"
     });
 
