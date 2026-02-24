@@ -1,4 +1,6 @@
 import { put } from "@vercel/blob";
+import { BLOB_READ_WRITE_TOKEN } from '.env';
+
 
 
 export async function GET() {
@@ -30,13 +32,13 @@ export async function GET() {
       }
 
       index[date].push({
-      spkid: obj[0],
-      full_name: obj[1],
-      pdes: obj[2],
-      name: obj[3],
-      neo: obj[4] === "Y",
-      pha: obj[5] === "Y" || obj[5] === "N",
-      diameter: obj[6],
+      spkid: spkid,
+      full_name: full_name,
+      pdes: pdes,
+      name: name,
+      neo: neo === "Y",
+      pha: pha === "Y" || pha === "N",
+      diameter: diameter,
       e: e,
       a: a,
       q: q,
@@ -54,10 +56,13 @@ export async function GET() {
       });
     }
 
+    console.log(process.env.BLOB_READ_WRITE_TOKEN);
+
     await put("neos-by-date.json", JSON.stringify(index), {
       access: "public",
       allowOverwrite: true, 
-      contentType: "application/json"
+      contentType: "application/json", 
+      token: BLOB_READ_WRITE_TOKEN
     });
 
     return Response.json({
