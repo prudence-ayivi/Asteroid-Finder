@@ -1,14 +1,24 @@
 import { put } from "@vercel/blob";
-import { BLOB_READ_WRITE_TOKEN } from '.env';
-
 
 
 export async function GET() {
   try {
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000); // 30 seconds timeout
+
     const nasaRes = await fetch(
-      "https://ssd-api.jpl.nasa.gov/sbdb_query.api?fields=spkid,full_name,pdes,name,diameter,e,a,q,i,om,ma,ad,n,per,per_y,class,first_obs,last_obs,H&sb-group=neo"
+      "https://ssd-api.jpl.nasa.gov/sbdb_query.api?fields=spkid,full_name,pdes,name,diameter,e,a,q,i,om,ma,ad,n,per,per_y,class,first_obs,last_obs,H&sb-group=neo",
+      {
+        headers: {
+          "User-Agent": "neo-app-vercel"
+        },
+        signal: controller.signal
+      }
     );
 
+    clearTimeout(timeout);
+    
     if (!nasaRes.ok) {
       const errorText = await nasaRes.text();
       console.error("NASA API error:", errorText);
@@ -62,8 +72,10 @@ export async function GET() {
       access: "public",
       allowOverwrite: true, 
       contentType: "application/json", 
-      token: BLOB_READ_WRITE_TOKEN
+      token: process.env.BLOB_READ_WRITE_TOKEN
     });
+
+    console.log("Blob uploaded");
 
     return Response.json({
       success: true,
@@ -71,6 +83,7 @@ export async function GET() {
     });
 
   } catch (err) {
+    console.error("Error during sync:", err);
     return new Response("Sync failed", { status: 500 });
   }
 }
