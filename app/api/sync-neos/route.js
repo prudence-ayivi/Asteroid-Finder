@@ -17,7 +17,7 @@ export async function GET() {
 
     const objects = data.data;
 
-    // const index = {};
+    const index = {};
     // if (!index[date]) index[date] = [];
 
     for (const obj of objects) {
