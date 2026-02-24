@@ -45,6 +45,7 @@ export async function GET() {
         per,
         per_y,
         class: classValue,
+        first_obs,
         last_obs,
         H,
       });
