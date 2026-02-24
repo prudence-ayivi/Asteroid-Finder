@@ -30,7 +30,7 @@ export default function AsteroidDetails({ asteroid }) {
   return (
     <div className="mt-4 bg-blue-50 rounded-lg p-4 md:p-6">
       <h2 className="text-2xl font-bold text-center text-gray-900 mb-4 font-sans">
-        {typeLabel} - {asteroid.name || asteroid.pdes}
+        {typeLabel} - {asteroid.name || asteroid.pdes} 
       </h2>
 
       {neoPhaSentence && (
