@@ -1,23 +1,11 @@
 import { put } from "@vercel/blob";
 
-
 export async function GET() {
-  try {
-
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30000); // 30 seconds timeout
+  try {  
 
     const nasaRes = await fetch(
       "https://ssd-api.jpl.nasa.gov/sbdb_query.api?fields=spkid,full_name,pdes,name,diameter,e,a,q,i,om,ma,ad,n,per,per_y,class,first_obs,last_obs,H&sb-group=neo",
-      {
-        headers: {
-          "User-Agent": "neo-app-vercel"
-        },
-        signal: controller.signal
-      }
     );
-
-    clearTimeout(timeout);
     
     if (!nasaRes.ok) {
       const errorText = await nasaRes.text();
@@ -32,7 +20,7 @@ export async function GET() {
     const index = {};
 
     for (const obj of objects) {
-      const [spkid, full_name, pdes, name, neo, pha, diameter, e, a, q, i, om, ma, ad, n, per, per_y, classValue, first_obs, last_obs, H] = obj;
+      const [spkid, full_name, pdes, name, diameter, e, a, q, i, om, ma, ad, n, per, per_y, classValue, first_obs, last_obs, H] = obj;
 
       const date = first_obs; // YYYY-MM-DD
       if (!date) return;
@@ -46,8 +34,7 @@ export async function GET() {
       full_name: full_name,
       pdes: pdes,
       name: name,
-      neo: neo === "Y",
-      pha: pha === "Y" || pha === "N",
+      neo: true,
       diameter: diameter,
       e: e,
       a: a,
@@ -66,16 +53,11 @@ export async function GET() {
       });
     }
 
-    console.log(process.env.BLOB_READ_WRITE_TOKEN);
-
     await put("neos-by-date.json", JSON.stringify(index), {
       access: "public",
       allowOverwrite: true, 
       contentType: "application/json", 
-      token: process.env.BLOB_READ_WRITE_TOKEN
     });
-
-    console.log("Blob uploaded");
 
     return Response.json({
       success: true,
