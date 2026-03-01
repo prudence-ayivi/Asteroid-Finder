@@ -1,11 +1,27 @@
-import data from "../../data/neos-by-date.json";
+// import data from "../../data/neos-by-date.json";
+const BLOB_URL = process.env.BLOB_URL;
+
+async function getAsteroids() {
+  const response = await fetch(BLOB_URL, {
+    next: { revalidate: 3600 } // cache 1h
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch blob data");
+  }
+
+  return response.json();
+
+}
+
+const data = await getAsteroids();
 
 // Calculer le nombre total unique d'astéroïdes
 function getTotalAsteroids() {
   const spkids = new Set();
   Object.values(data).forEach(asteroids => {
-    asteroids.forEach(ast => {
-      spkids.add(ast.spkid);
+    asteroids.forEach(asteroid => {
+      spkids.add(asteroid.spkid);
     });
   });
   return spkids.size;
@@ -73,11 +89,11 @@ export async function GET(request) {
     const k2 = d2.toISOString().slice(0, 10);
 
     if (data[k1]) {
-      data[k1].forEach(ast => fallback.push(ast));
+      data[k1].forEach(asteroid => fallback.push(asteroid));
       if (!foundDates.has(k1)) foundDates.set(k1, data[k1].length);
     }
     if (data[k2]) {
-      data[k2].forEach(ast => fallback.push(ast));
+      data[k2].forEach(asteroid => fallback.push(asteroid));
       if (!foundDates.has(k2)) foundDates.set(k2, data[k2].length);
     }
   }

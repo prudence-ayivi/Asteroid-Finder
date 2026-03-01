@@ -1,4 +1,20 @@
-import data from '../../../data/neos-by-date.json';
+// import data from '../../../data/neos-by-date.json';
+const BLOB_URL = process.env.BLOB_URL;
+
+async function getAsteroids() {
+  const response = await fetch(BLOB_URL, {
+    next: { revalidate: 3600 } // cache 1h
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch blob data");
+  }
+
+  return response.json();
+
+}
+
+const data = await getAsteroids();
 
 function makeMessage(count, q) {
   if (count === 0) return `No results for "${q}"`;

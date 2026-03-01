@@ -14,7 +14,7 @@
 3. Frontend fetches and displays NEOs 
 
 ## Next features - v3 : 
-- Cron job to get automatic update db from NASA 
+- Add about the project
 - Add warning badge for object category 
 - Check object closest aproch on date (from today to future date only)
 - Filter to search object by properties (diameter, magnitude)

@@ -6,7 +6,8 @@ export default function AsteroidDetails({ asteroid }) {
   if (!asteroid) return null;
 
   const orbitType = getOrbitType(asteroid.class);
-  const nasaLink = `https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=${encodeURIComponent(asteroid.name || asteroid.pdes)}`;
+  const objectDetails = `https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=${encodeURIComponent(asteroid.name || asteroid.pdes)}`;
+  const objectCAData = `https://ssd-api.jpl.nasa.gov/sbdb_lookup.html#/?sstr=${encodeURIComponent(asteroid.name || asteroid.pdes)}&ca-data=true&ca-body=Earth`;
 
   // Determine if comet or asteroid
   const isComet = asteroid.class && ['ETc', 'JFc', 'JFC', 'CTc', 'HTC', 'PAR', 'HYP', 'COM'].includes(asteroid.class);
@@ -120,7 +121,7 @@ export default function AsteroidDetails({ asteroid }) {
       </div>
 
       <a
-        href={nasaLink}
+        href={objectDetails}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition font-sans"
