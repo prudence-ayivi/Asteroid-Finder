@@ -1,36 +1,22 @@
-// import data from '../../../data/neos-by-date.json';
-const BLOB_URL = process.env.BLOB_URL;
+import { getNeoData } from "@/app/lib/neoData";
 
-async function getAsteroids() {
-  const response = await fetch(BLOB_URL, {
-    next: { revalidate: 3600 } // cache 1h
-  });
+const { data } = await getNeoData();
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch blob data");
-  }
-
-  return response.json();
-
-}
-
-const data = await getAsteroids();
-
-function makeMessage(count, q) {
-  if (count === 0) return `No results for "${q}"`;
-  return `${count} result${count !== 1 ? 's' : ''} for "${q}"`;
+function makeMessage(count, name) {
+  if (count === 0) return `No results for "${name}"`;
+  return `${count} result${count !== 1 ? 's' : ''} for "${name}"`;
 }
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const q = (searchParams.get('q') || '').trim();
+  const name = (searchParams.get('name') || '').trim();
   const limit = parseInt(searchParams.get('limit') || '50', 10);
 
-  if (!q) {
-    return Response.json({ success: false, message: 'Query parameter `q` is required', objects: [] }, { status: 400 });
+  if (!name) {
+    return Response.json({ success: false, message: 'Query parameter `name` is required', objects: [] }, { status: 400 });
   }
 
-  const search = q.toLowerCase();
+  const search = name.toLowerCase();
   const results = [];
 
   // Iterate date buckets and their arrays; stop once limit reached to avoid scanning everything
@@ -55,10 +41,10 @@ export async function GET(request) {
 
   return Response.json({
     success: true,
-    query: q,
+    query: name,
     totalMatches: results.length,
     limit,
-    message: makeMessage(results.length, q),
+    message: makeMessage(results.length, name),
     objects: results
   });
 }

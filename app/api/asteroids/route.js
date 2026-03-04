@@ -1,31 +1,6 @@
-// import data from "../../data/neos-by-date.json";
-const BLOB_URL = process.env.BLOB_URL;
+import { getNeoData } from "@/app/lib/neoData";
 
-async function getAsteroids() {
-  const response = await fetch(BLOB_URL, {
-    next: { revalidate: 3600 } // cache 1h
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch blob data");
-  }
-
-  return response.json();
-
-}
-
-const data = await getAsteroids();
-
-// Calculer le nombre total unique d'astéroïdes
-function getTotalAsteroids() {
-  const spkids = new Set();
-  Object.values(data).forEach(asteroids => {
-    asteroids.forEach(asteroid => {
-      spkids.add(asteroid.spkid);
-    });
-  });
-  return spkids.size;
-}
+const { data, total } = await getNeoData();
 
 // Trouver la date la plus proche
 function findClosestDate(targetDate) {
@@ -58,7 +33,7 @@ export async function GET(request) {
     );
   }
 
-  const totalAsteroids = getTotalAsteroids();
+  const totalAsteroids = total;
 
   // Exact match
   if (data[date]) {

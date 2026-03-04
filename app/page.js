@@ -51,7 +51,7 @@ export default function Home() {
 
     const timer = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/asteroids/search?q=${encodeURIComponent(nameQuery)}&limit=20`, { signal: controller.signal });
+        const res = await fetch(`/api/asteroids/search?name=${encodeURIComponent(nameQuery)}&limit=20`, { signal: controller.signal });
         const json = await res.json();
         if (!res.ok) {
           setNameError(json.message || 'Error searching');

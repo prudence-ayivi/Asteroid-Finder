@@ -16,10 +16,10 @@
 ## Next features - v3 : 
 - Add about the project
 - Add warning badge for object category 
-- Check object closest aproch on date (from today to future date only)
-- Filter to search object by properties (diameter, magnitude)
 - Left panel : last 10 objects discovered, graphs of objects discovery
-- Right panel : next 10 closet approach
+- Add popup feature for object detail view
+- Switch database between the full list of objects or only NEO 
+- Filter to search object by properties (diameter, magnitude)
 - Export CSV 
 
 

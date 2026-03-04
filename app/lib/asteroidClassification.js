@@ -10,19 +10,19 @@ export const ORBIT_TYPES = [
     code: 'ATE',
     kind: 'A',
     title: 'Aten',
-    description: 'Near-Earth asteroid orbits similar to that of 2062 Aten (a < 1.0 AU; Q > 0.983 AU).'
+    description: 'Near-Earth Asteroid orbits similar to that of 2062 Aten (a < 1.0 AU; Q > 0.983 AU).'
   },
   {
     code: 'APO',
     kind: 'A',
     title: 'Apollo',
-    description: 'Near-Earth asteroid orbits which cross the Earth\'s orbit similar to that of 1862 Apollo (a > 1.0 AU; q < 1.017 AU).'
+    description: 'Near-Earth Asteroid orbits which cross the Earth\'s orbit similar to that of 1862 Apollo (a > 1.0 AU; q < 1.017 AU).'
   },
   {
     code: 'AMO',
     kind: 'A',
     title: 'Amor',
-    description: 'Near-Earth asteroid orbits similar to that of 1221 Amor (1.017 AU < q < 1.3 AU).'
+    description: 'Near-Earth Asteroid orbits similar to that of 1221 Amor (1.017 AU < q < 1.3 AU).'
   },
   {
     code: 'MCA',
