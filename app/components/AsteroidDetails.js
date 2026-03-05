@@ -2,6 +2,7 @@
 
 import { getOrbitType, getOrbitTypeLabel } from '@/app/lib/asteroidClassification';
 import { useState, useEffect } from "react";
+import { Info } from "lucide-react";
 
 export default function AsteroidDetails({ asteroid }) {
   const [futureCA, setFutureCA] = useState(null);
@@ -23,7 +24,6 @@ export default function AsteroidDetails({ asteroid }) {
 
   const orbitType = getOrbitType(asteroid.class);
   const objectDetails = `https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=${encodeURIComponent(asteroid.name || asteroid.pdes)}`;
-  // const objectCAData = `https://ssd-api.jpl.nasa.gov/sbdb_lookup.html#/?sstr=${encodeURIComponent(asteroid.name || asteroid.pdes)}&ca-data=true&ca-body=Earth`;
 
   // Determine if comet or asteroid
   const isComet = asteroid.class && ['ETc', 'JFc', 'JFC', 'CTc', 'HTC', 'PAR', 'HYP', 'COM'].includes(asteroid.class);
@@ -36,7 +36,7 @@ export default function AsteroidDetails({ asteroid }) {
       parts.push('a Near-Earth Object (NEO)');
     }
     if (asteroid.moid <= 0.05 && asteroid.H <= 22.0) {
-      parts.push('a Potentially Hazardous Asteroid (PHA)');
+      return asteroid.isPHA && parts.push('a Potentially Hazardous Asteroid (PHA)');
     }
     if (parts.length === 0) return null;
     return parts.join(' and ');
@@ -46,9 +46,14 @@ export default function AsteroidDetails({ asteroid }) {
 
   return (
     <div className="mt-4 bg-blue-50 rounded-lg p-3 md:p-6">
-      <h2 className="text-2xl font-bold text-center text-gray-900 mb-4 font-sans">
-        {typeLabel} - {asteroid.name || asteroid.pdes}
+      <div className="flex items-center justify-center gap-2 mb-4">
+      <h2 className="text-xl md:text-2xl font-bold text-gray-900 font-sans">
+        {typeLabel} - {asteroid.name || asteroid.pdes} 
       </h2>
+      <span className="pt-1">
+      <Info size={23}/>
+      </span>
+      </div>
 
       {neoPhaSentence && (
         <p className="text-gray-700 font-bold mb-4">Is {neoPhaSentence}.</p>

@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import AsteroidList from './components/AsteroidList';
 import { getDateRange } from './lib/dateRangeUtils';
+import AboutPanel from './components/AboutPanel';
+import { Info } from "lucide-react";
 
 export default function Home() {
   const [date, setDate] = useState('');
@@ -16,9 +18,25 @@ export default function Home() {
   const [data, setData] = useState(null);
   const [selectedAsteroid, setSelectedAsteroid] = useState(null);
   const [totalAsteroids, setTotalAsteroids] = useState(0);
+  const [open, setOpen] = useState(false);
+  const panelRef = useRef(null);
+
   
   // Get date range constraints
   const { minDate, maxDate } = getDateRange();
+
+  // About panel click handler
+  useEffect(() => {
+  function handleClickOutside(e) {
+    if (!panelRef.current?.contains(e.target)) {
+      setOpen(false);
+    }
+  }
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
 
   // Load total asteroids on mount
   useEffect(() => {
@@ -136,8 +154,22 @@ export default function Home() {
           priority
         />
         <div className="relative z-10">
-          <h1 className="text-4xl md:text-5xl font-bold mb-2 font-sans">Asteroid Finder</h1>
-          <p className="md:text-sm text-gray-300">Explore asteroids by discovery or first observation date</p>
+        <div className="flex items-center gap-3 mb-2">
+          <h1 className="text-4xl md:text-5xl font-bold font-sans">
+            Asteroid Finder
+          </h1>
+          <button
+            onClick={() => setOpen(!open)}
+            onMouseEnter={() => setOpen(true)}
+            className="cursor-pointer text-white pt-3"
+          >
+          <Info size={25} />
+          </button>
+          {open && <AboutPanel close={() => setOpen(false)} />}
+        </div>
+          <p className="md:text-sm text-gray-300">
+            Explore asteroids by discovery or first observation date
+          </p>
         </div>
       </div>
 
@@ -147,8 +179,12 @@ export default function Home() {
         {totalAsteroids > 0 && (
           <div className="bg-white rounded-lg p-4 shadow-md">
             <p className="text-sm text-gray-600">Database contains</p>
-            <p className="text-xl font-bold text-gray-900 font-sans">{totalAsteroids.toLocaleString()} Near Earth Objects</p>
-            <p className="text-sm text-gray-500 mt-1">From NASA JPL Small-Body Database</p>
+            <p className="text-xl font-bold text-gray-900 font-sans">
+              {totalAsteroids.toLocaleString()} Near Earth Objects
+            </p>
+            <p className="text-sm text-gray-500 mt-1">
+              From NASA JPL Small-Body Database
+            </p>
           </div>
         )}
 
@@ -179,36 +215,42 @@ export default function Home() {
                   disabled={loading || !!nameQuery}
                   className="bg-gray-900 cursor-pointer hover:bg-gray-800 disabled:opacity-50 text-white font-semibold px-4 py-3 rounded-lg transition whitespace-nowrap"
                 >
-                  {loading ? 'Searching...' : 'Search'}
+                  {loading ? "Searching..." : "Search"}
                 </button>
               </div>
             </div>
-            <p className="text-[12px] text-gray-500">The date are based on first officaily recorded observation, which for some objects differed from official discovery date</p>
+            <p className="text-[12px] text-gray-500">
+              The date are based on first officaily recorded observation, which
+              for some objects differed from official discovery date
+            </p>
           </div>
         </div>
 
-          {/* Name search dropdown / suggestions */}
-              {nameQuery && (
-                <div className="mt-3">
-                  <div className="bg-white rounded-lg shadow-sm">
-                    {nameLoading && <p className="text-gray-600 p-3">Searching...</p>}
-                    {nameError && <p className="text-red-600 p-3">{nameError}</p>}
-                    {!nameLoading && !nameError && nameResults && nameResults.length === 0 && (
-                      <p className="text-gray-500 p-3">No results</p>
-                    )}
-                    {!nameLoading && nameResults && nameResults.length > 0 && (
-                      <div>
-                        <p className="text-sm text-gray-600 p-3">Results</p>
-                        <AsteroidList
-                          asteroids={nameResults}
-                          selectedAsteroid={selectedAsteroid}
-                          onSelectAsteroid={handleSelectAsteroid}
-                        />
-                      </div>
-                    )}
-                  </div>
+        {/* Name search dropdown / suggestions */}
+        {nameQuery && (
+          <div className="mt-3">
+            <div className="bg-white rounded-lg shadow-sm">
+              {nameLoading && <p className="text-gray-600 p-3">Searching...</p>}
+              {nameError && <p className="text-red-600 p-3">{nameError}</p>}
+              {!nameLoading &&
+                !nameError &&
+                nameResults &&
+                nameResults.length === 0 && (
+                  <p className="text-gray-500 p-3">No results</p>
+                )}
+              {!nameLoading && nameResults && nameResults.length > 0 && (
+                <div>
+                  <p className="text-sm text-gray-600 p-3">Results</p>
+                  <AsteroidList
+                    asteroids={nameResults}
+                    selectedAsteroid={selectedAsteroid}
+                    onSelectAsteroid={handleSelectAsteroid}
+                  />
                 </div>
               )}
+            </div>
+          </div>
+        )}
 
         {/* Results */}
         {loading && (
@@ -229,19 +271,22 @@ export default function Home() {
         {data && !loading && (
           <div>
             {/* Status message */}
-            <div className={`rounded-lg shadow-sm p-6 mb-6 ${
-              data.exact
-                ? 'bg-green-50'
-                : 'bg-blue-50'
-            }`}>
-              <p className={`font-semibold ${
-                data.exact ? 'text-green-900' : 'text-blue-900'
-              }`}>
+            <div
+              className={`rounded-lg shadow-sm p-6 mb-6 ${
+                data.exact ? "bg-green-50" : "bg-blue-50"
+              }`}
+            >
+              <p
+                className={`font-semibold ${
+                  data.exact ? "text-green-900" : "text-blue-900"
+                }`}
+              >
                 {data.message}
               </p>
               {!data.exact && data.closestDate && (
                 <p className="text-sm text-gray-600 mt-2">
-                  Closest date: <span className="font-semibold">{data.closestDate}</span>
+                  Closest date:{" "}
+                  <span className="font-semibold">{data.closestDate}</span>
                 </p>
               )}
             </div>
@@ -250,7 +295,8 @@ export default function Home() {
             {data.foundCount > 0 ? (
               <div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-4 font-sans">
-                  {data.foundCount} object{data.foundCount !== 1 ? 's' : ''} found
+                  {data.foundCount} object{data.foundCount !== 1 ? "s" : ""}{" "}
+                  found
                 </h2>
                 <AsteroidList
                   asteroids={data.objects}
@@ -260,7 +306,9 @@ export default function Home() {
               </div>
             ) : (
               <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-                <p className="text-gray-500 font-semibold text-lg">No objects found</p>
+                <p className="text-gray-500 font-semibold text-lg">
+                  No objects found
+                </p>
               </div>
             )}
           </div>
@@ -268,14 +316,19 @@ export default function Home() {
 
         {!loading && !error && !data && (
           <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-            <p className="text-gray-500 font-semibold text-lg">Select a date to start exploring</p>
+            <p className="text-gray-500 font-semibold text-lg">
+              Select a date to start exploring
+            </p>
           </div>
         )}
       </div>
 
       {/* Footer */}
       <div className="bg-gray-900 text-gray-400 text-sm py-6 px-8 border-t border-gray-700">
-        <p>Asteroid Finder © 2025 - {new Date().getFullYear()} | By Prudence AYIVI</p>
+        <p>
+          Asteroid Finder © 2025 - {new Date().getFullYear()} | By Prudence
+          AYIVI
+        </p>
       </div>
     </div>
   );
