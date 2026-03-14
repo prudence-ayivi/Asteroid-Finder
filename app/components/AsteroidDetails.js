@@ -29,14 +29,17 @@ export default function AsteroidDetails({ asteroid }) {
   const isComet = asteroid.class && ['ETc', 'JFc', 'JFC', 'CTc', 'HTC', 'PAR', 'HYP', 'COM'].includes(asteroid.class);
   const typeLabel = isComet ? 'Comet' : 'Asteroid';
 
+  // Determine if PHA 
+  const isPHA = Number(asteroid.moid) <= 0.05 && Number(asteroid.H) <= 22.0;
+
   // Format NEO/PHA statement
   const getNeoPhaSentence = () => {
     const parts = [];
     if (asteroid.neo) {
       parts.push('a Near-Earth Object (NEO)');
     }
-    if (asteroid.moid <= 0.05 && asteroid.H <= 22.0) {
-      return asteroid.isPHA && parts.push('a Potentially Hazardous Asteroid (PHA)');
+    if (isPHA) {
+      parts.push('a Potentially Hazardous Asteroid (PHA)');
     }
     if (parts.length === 0) return null;
     return parts.join(' and ');
@@ -50,8 +53,9 @@ export default function AsteroidDetails({ asteroid }) {
       <h2 className="text-xl md:text-2xl font-bold text-gray-900 font-sans">
         {typeLabel} - {asteroid.name || asteroid.pdes} 
       </h2>
-      <span className="pt-1">
-      <Info size={23}/>
+      <span className="rounded-full p-1 bg-gray-100 shadow-sm">
+      <Info size={23} className={isPHA ? "text-red-600" : "text-gray-700"}
+      />
       </span>
       </div>
 
@@ -155,7 +159,7 @@ export default function AsteroidDetails({ asteroid }) {
             <span className="font-semibold font-sans">
               Aphelion Distance (ad) :
             </span>{" "}
-            {asteroid.ad} AU
+            {asteroid.ad} AU 
           </p>
         )}
       </div>
