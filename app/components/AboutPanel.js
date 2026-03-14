@@ -16,7 +16,7 @@ export default function AboutPanel({ open, close, panelRef }) {
       <h2 className="text-xl font-semibold mb-4">About this project</h2>
 
       <p className="text-sm leading-relaxed mb-4">
-        This project allows ameteur and profesionnal astronomer, and citizen
+        This project allows amateur and profesionnal astronomer, and citizen
         scientists to easily explore the growing catalog of asteroids detected
         by NASA. Instead of navigating complex databases, users can search
         and explore asteroid discoveries through this simplified interface.

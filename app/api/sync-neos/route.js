@@ -1,6 +1,15 @@
 import { put } from "@vercel/blob";
+import {NextResponse} from 'next/server';
 
 export async function GET() {
+
+  if (
+    req.headers.get("authorization") !==
+    `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
   try {  
 
     const nasaRes = await fetch(
@@ -10,7 +19,7 @@ export async function GET() {
     if (!nasaRes.ok) {
       const errorText = await nasaRes.text();
       console.error("NASA API error:", errorText);
-      return new Response("NASA fetch failed", { status: 500 });
+      return NextResponse.json({ error: "NASA fetch failed" }, { status: 500 });
     }
 
     const data = await nasaRes.json();
@@ -23,7 +32,7 @@ export async function GET() {
       const [spkid, full_name, pdes, name, diameter, e, a, q, i, om, ma, ad, n, per, per_y, classValue, first_obs, last_obs, H, moid] = obj;
 
       const date = first_obs; // YYYY-MM-DD
-      if (!date) return;
+      if (!date) continue;
 
       if (!index[date]) {
         index[date] = [];
@@ -60,13 +69,13 @@ export async function GET() {
       contentType: "application/json", 
     });
 
-    return Response.json({
+    return NextResponse.json({
       success: true,
       dates: Object.keys(index).length
     });
 
   } catch (err) {
     console.error("Error during sync:", err);
-    return new Response("Sync failed", { status: 500 });
+    return NextResponse.json("Sync failed", { status: 500 });
   }
 }

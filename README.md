@@ -1,6 +1,6 @@
 ## Asteroid Finder
 
-1. Project Overview
+## 1. Project Overview
 
 Asteroid Finder is a web application designed to make NASA asteroid discovery data easier to explore and understand.
 
@@ -21,7 +21,7 @@ For users who want more detailed scientific information, each object includes a 
 
 The goal of this project is to make asteroid data more accessible while preserving the scientific integrity of the original dataset.
 
-2. Project Motivation
+## 2. Project Motivation
 
 NASA and the Minor Planet Center have discovered more than 1.5 million asteroids, and this number continues to grow rapidly thanks to automated surveys and citizen science contributions.
 
@@ -38,7 +38,7 @@ The project was inspired by SpaceReference.org, which previously provided a simp
 
 *Asteroid Finder* aims to provide a modern, updated and lightweight alternative focused specifically on asteroid discoveries.
 
-3. Data Source
+## 3. Data Source
 
 The application uses data from NASA's official database:
 
@@ -56,7 +56,7 @@ The dataset includes information such as:
 - discovery and observation dates
 - close approach data relative to Earth
 
-4. Automated Data Processing Pipeline
+## 4. Automated Data Processing Pipeline
 
 Because the NASA asteroid dataset is continuously evolving, the application relies on an automated data ingestion pipeline. The platform automatically updates its asteroid dataset using a scheduled server job.
 
@@ -71,14 +71,14 @@ Process workflow:
 
 This approach ensures that the application always uses up-to-date asteroid discovery data without manual updates.
 
-5. Architecture
+## 5. Architecture
 
 The project uses a modern full-stack JavaScript architecture.
 
 Frontend : 
 
-Next.js (React)
-Tailwind CSS
+- Next.js (React)
+- Tailwind CSS
 
 Main features:
 
@@ -99,7 +99,8 @@ The backend is implemented using Next.js API Routes, which handle:
 
 These routes interact with the stored dataset hosted in Vercel Blob Storage.
 
-6. Data Storage & Performance Optimizations
+
+## 6. Data Storage & Performance Optimizations
 
 The project uses Vercel Blob Storage to store the processed JSON dataset.
 
@@ -113,7 +114,7 @@ Advantages of this approach:
 The asteroid dataset fetched from Blob Storage is cached in server memory, avoiding repeated downloads for each request. Search operations limit the number of results returned to prevent expensive dataset scans.
 
 
-7. Close Approach Analysis
+## 7. Close Approach Analysis
 
 For each asteroid, the application can retrieve close approach data relative to Earth using NASA's SBDB API.
 
@@ -126,7 +127,7 @@ The system automatically:
 This allows users to quickly identify asteroids that will approach Earth in the future.
 
 
-8. Future Improvements
+## 8. Future Improvements
 
 Several improvements may be added in future versions of the project.
 
@@ -143,12 +144,12 @@ Possible features :
 - integration with additional NASA datasets
 - Data export in CSV 
 
-9. Project Status
+## 9. Project Status
 
 The project automatically integrates new asteroid discoveries through the scheduled ingestion pipeline.
 As asteroid discovery programs continue to expand, the dataset is expected to grow to several million objects in the coming years.
 
-10. Credits
+## 10. Credits
 
 Data provided by:
 
@@ -156,7 +157,7 @@ NASA Jet Propulsion Laboratory Small-Body Database (SBDB)
 
 Inspired by:
 
-SpaceReference.org
+*SpaceReference.org*
 
 Build by : 
 
