@@ -1,10 +1,10 @@
 import { put } from "@vercel/blob";
 import {NextResponse} from 'next/server';
 
-export async function GET() {
+export async function GET(request) {
 
   if (
-    req.headers.get("authorization") !==
+    request.headers.get("authorization") !==
     `Bearer ${process.env.CRON_SECRET}`
   ) {
     return new Response("Unauthorized", { status: 401 });
